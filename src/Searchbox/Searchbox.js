@@ -6,7 +6,7 @@ class searchbox extends Component {
     state = {
         placeholder: "something place",
         searchvalue: "",
-        listdata: ['item 1', 'item 2', 'item 3']
+        listdata: [{id:12,group:"animals",name:"dog"}, {id:15,group:"animals",name:"cat"}, {id:22,group:"plants",name:"willow"}]
     }
     searchInputHander = (event) => {
         let newList = [...this.state.listdata];
@@ -14,8 +14,11 @@ class searchbox extends Component {
         this.setState({ listdata: newList });
     }
     render() {
+        const style = {
+            position: "relative"
+        }
         return  (
-            <div>
+            <div style={ style }>
                 <SearchboxInput changed={this.searchInputHander} placeholder={this.state.placeholder} />
                 <SearchboxList>{this.state.listdata}</SearchboxList>
             </div>
