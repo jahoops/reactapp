@@ -23,8 +23,10 @@ class App extends Component {
           <div className="col-8">
             <div className="row bg-success text-center"><h1>React App</h1></div>
             <div className="row"><div className="col-4 m-auto"><Select options={this.options} /></div></div>
-            <div className="row"></div>
-            <Person placeholder='input jumbo here' />
+            <div className="row"> 
+              <Person placeholder='input jumbo here' />
+            </div>
+           
           </div>
           <div className="col-2 bg-dark"></div>
         </div>
