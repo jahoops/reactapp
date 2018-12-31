@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import SearchboxInput from './SearchboxInput/SearchboxInput';
 import SearchboxList from './SearchboxList/SearchboxList';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 class searchbox extends Component {
     state = {
@@ -14,21 +15,47 @@ class searchbox extends Component {
         newList[0] = event.target.value;
         this.setState({ listdata: newList });
     }
+    checkStatus = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return response
+        } else {
+          var error = new Error(response.statusText)
+          error.response = response
+          throw error
+        }
+      }
+    updateData = (data) => {
+        const newid = this.state.listdata.length + 1;
+        const item = {id:newid, group: "gophers"+newid, name: "groovy"+newid};
+        return fetch('https://localhost:44311/api/todoitems/1', {
+          method: 'put',
+          body: JSON.stringify(item),
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(this.checkStatus)
+          .then(()=>console.log('updated!!!'))
+      }
     async getData() {
         let headers = new Headers();
-
-        var requestOptions = { 
+        const requestOptions = { 
             method: 'GET',
             headers: headers,
             mode: 'cors',
             cache: 'default' 
         };
-        await fetch(`https://localhost:44311/api/todo/1`,requestOptions)
+        await fetch(`https://localhost:44311/api/todoitems/`,requestOptions)
             .then(response => response.json())
             .then(data => {
-                console.log('data', data);
                 let newList = [...this.state.listdata];
-                newList.push({id:data.id,group:data.isComplete.toString(),name:data.name});
+                for(let i = 0; i < data.length; i++) {
+                    const d = data[i];
+                    newList.push({id:d.id,group:d.isComplete.toString(),name:d.name});
+                }
+                console.log(data, newList);
+                
                 this.setState({ listdata: newList });
             });
     }
