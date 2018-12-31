@@ -23,11 +23,14 @@ class searchbox extends Component {
             mode: 'cors',
             cache: 'default' 
         };
-        const todo = await fetch(`https://localhost:44311/api/todo/1`,requestOptions);
-        console.log('todo', todo, todo.json());
-        let newList = [...this.state.listdata];
-        newList.push({id:todo.id,group:todo.isComplete,name:todo.name});
-        this.setState({ listdata: newList });
+        await fetch(`https://localhost:44311/api/todo/1`,requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                console.log('data', data);
+                let newList = [...this.state.listdata];
+                newList.push({id:data.id,group:data.isComplete.toString(),name:data.name});
+                this.setState({ listdata: newList });
+            });
     }
     render() {
         const style = {
